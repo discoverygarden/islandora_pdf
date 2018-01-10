@@ -1,0 +1,11 @@
+name: 'Islandora PDF'
+description: 'A default Islandora Repository module to handle PDF files'
+dependencies:
+  - islandora
+  - imagemagick
+package: 'Islandora Solution Packs'
+core: 8.x
+stylesheets:
+  all:
+    - css/islandora_pdf.theme.css
+type: module

@@ -1,0 +1,22 @@
+islandora_pdf.settings:
+  type: mapping
+  label: Settings
+  mapping:
+    islandora_pdf_thumbnail_width:
+      type: integer
+    islandora_pdf_thumbnail_height:
+      type: integer
+    islandora_pdf_path_to_pdftotext:
+      type: string
+    islandora_pdf_path_to_gs:
+      type: string
+    islandora_pdf_preview_width:
+      type: integer
+    islandora_pdf_preview_height:
+      type: integer
+    islandora_pdf_create_fulltext:
+      type: boolean
+    islandora_pdf_create_pdfa:
+      type: boolean
+    islandora_pdf_allow_text_upload:
+      type: boolean

@@ -91,7 +91,16 @@ function islandora_pdf_islandora_required_objects(IslandoraTuque $connection) {
  * Implements hook_CMODEL_PID_islandora_view_object().
  */
 function islandora_pdf_islandora_sp_pdf_islandora_view_object($object, $page_number, $page_size) {
-  $output = theme('islandora_pdf', array('islandora_object' => $object));
+  // @FIXME
+// theme() has been renamed to _theme() and should NEVER be called directly.
+// Calling _theme() directly can alter the expected output and potentially
+// introduce security issues (see https://www.drupal.org/node/2195739). You
+// should use renderable arrays instead.
+// 
+// 
+// @see https://www.drupal.org/node/2195739
+// $output = theme('islandora_pdf', array('islandora_object' => $object));
+
   return array('' => $output);
 }
 
@@ -99,7 +108,16 @@ function islandora_pdf_islandora_sp_pdf_islandora_view_object($object, $page_num
  * Implements hook_islandora_view_print_object().
  */
 function islandora_pdf_islandora_view_print_object($object) {
-  $output = theme('islandora_pdf_print', array('islandora_object' => $object));
+  // @FIXME
+// theme() has been renamed to _theme() and should NEVER be called directly.
+// Calling _theme() directly can alter the expected output and potentially
+// introduce security issues (see https://www.drupal.org/node/2195739). You
+// should use renderable arrays instead.
+// 
+// 
+// @see https://www.drupal.org/node/2195739
+// $output = theme('islandora_pdf_print', array('islandora_object' => $object));
+
   return array('pdf' => $output);
 }
 
@@ -169,7 +187,7 @@ function islandora_pdf_islandora_sp_pdf_islandora_derivative() {
     ),
     'file' => drupal_get_path('module', 'islandora_pdf') . '/includes/derivatives.inc',
   );
-  if (variable_get('islandora_pdf_create_fulltext', FALSE)) {
+  if (\Drupal::config('islandora_pdf.settings')->get('islandora_pdf_create_fulltext')) {
     $derivatives[] = array(
       'source_dsid' => 'OBJ',
       'destination_dsid' => 'FULL_TEXT',
@@ -180,7 +198,7 @@ function islandora_pdf_islandora_sp_pdf_islandora_derivative() {
       'file' => drupal_get_path('module', 'islandora_pdf') . '/includes/derivatives.inc',
     );
   }
-  if (variable_get('islandora_pdf_create_pdfa', FALSE)) {
+  if (\Drupal::config('islandora_pdf.settings')->get('islandora_pdf_create_pdfa')) {
     $derivatives[] = array(
       'source_dsid' => 'OBJ',
       'destination_dsid' => 'PDFA',

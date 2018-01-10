@@ -19,7 +19,12 @@
 function islandora_pdf_pdf_upload_form(array $form, array &$form_state) {
   $upload_size = min((int) ini_get('post_max_size'), (int) ini_get('upload_max_filesize'));
   $extensions = array('pdf');
-  $upload_required = variable_get('islandora_require_obj_upload', TRUE);
+  // @FIXME
+// // @FIXME
+// // This looks like another module's variable. You'll need to rewrite this call
+// // to ensure that it uses the correct configuration object.
+// $upload_required = variable_get('islandora_require_obj_upload', TRUE);
+
   $form = array();
   $form['file'] = array(
     '#title' => t('PDF File'),
@@ -35,7 +40,7 @@ function islandora_pdf_pdf_upload_form(array $form, array &$form_state) {
     ),
   );
 
-  if (variable_get('islandora_pdf_allow_text_upload', FALSE)) {
+  if (\Drupal::config('islandora_pdf.settings')->get('islandora_pdf_allow_text_upload')) {
     $form['islandora_pdf_text_upload'] = array(
       '#type' => 'checkbox',
       '#title' => t("Add text file to this upload?"),
@@ -82,7 +87,7 @@ function islandora_pdf_pdf_upload_form_submit(array $form, array &$form_state) {
       $ds = $object['OBJ'];
     }
     $pdf_file = file_load($form_state['values']['file']);
-    $pdf_path = drupal_realpath($pdf_file->uri);
+    $pdf_path = \Drupal::service("file_system")->realpath($pdf_file->uri);
     $ds->setContentFromFile($pdf_path, FALSE);
     $ds->label = $pdf_file->filename;
     $ds->mimetype = $pdf_file->filemime;
@@ -97,7 +102,7 @@ function islandora_pdf_pdf_upload_form_submit(array $form, array &$form_state) {
       $ds = $object['FULL_TEXT'];
     }
     $text_file = file_load($form_state['values']['text']);
-    $text_path = drupal_realpath($text_file->uri);
+    $text_path = \Drupal::service("file_system")->realpath($text_file->uri);
     $ds->setContentFromFile($text_path, FALSE);
     $ds->label = $text_file->filename;
     $ds->mimetype = $text_file->filemime;

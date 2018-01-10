@@ -14,27 +14,39 @@ function islandora_pdf_admin($form, &$form_state) {
     $islandora_pdf_path_to_pdftotext = $form_state['values']['islandora_pdf_path_to_pdftotext'];
   }
   else {
-    $islandora_pdf_path_to_pdftotext = variable_get('islandora_pdf_path_to_pdftotext', '/usr/bin/pdftotext');
+    $islandora_pdf_path_to_pdftotext = \Drupal::config('islandora_pdf.settings')->get('islandora_pdf_path_to_pdftotext');
   }
   exec($islandora_pdf_path_to_pdftotext, $output, $return_value);
-  $pdftotext_confirmation_message = '<img src="' . url('misc/watchdog-ok.png') . '"/>'
+  // @FIXME
+// url() expects a route name or an external URI.
+// $pdftotext_confirmation_message = '<img src="' . url('misc/watchdog-ok.png') . '"/>'
       . t('pdftotext executable found at !url', array('!url' => "<strong>$islandora_pdf_path_to_pdftotext</strong>"));
+
   if ($return_value != 99) {
-    $pdftotext_confirmation_message = '<img src="' . url('misc/watchdog-error.png') . '"/> '
+    // @FIXME
+// url() expects a route name or an external URI.
+// $pdftotext_confirmation_message = '<img src="' . url('misc/watchdog-error.png') . '"/> '
         . t('Unable to find pdftotext executable at !url', array('!url' => "<strong>$islandora_pdf_path_to_pdftotext</strong>"));
+
   }
 
   if (isset($form_state['values']['islandora_pdf_path_to_gs'])) {
     $islandora_pdf_path_to_gs = $form_state['values']['islandora_pdf_path_to_gs'];
   }
   else {
-    $islandora_pdf_path_to_gs = variable_get('islandora_pdf_path_to_gs', '/usr/bin/gs');
+    $islandora_pdf_path_to_gs = \Drupal::config('islandora_pdf.settings')->get('islandora_pdf_path_to_gs');
   }
   $gs_test_command = $islandora_pdf_path_to_gs . ' --help';
   exec($gs_test_command, $output, $return_value);
-  $gs_confirmation_message = '<img src="' . url('misc/watchdog-ok.png') . '"/>' . t('ghostscript executable found at !url', array('!url' => "<strong>$islandora_pdf_path_to_gs</strong>"));
+  // @FIXME
+// url() expects a route name or an external URI.
+// $gs_confirmation_message = '<img src="' . url('misc/watchdog-ok.png') . '"/>' . t('ghostscript executable found at !url', array('!url' => "<strong>$islandora_pdf_path_to_gs</strong>"));
+
   if ($return_value != 0) {
-    $gs_confirmation_message = '<img src="' . url('misc/watchdog-error.png') . '"/> ' . t('Unable to find ghotscript executable at !url', array('!url' => "<strong>$islandora_pdf_path_to_gs</strong>"));
+    // @FIXME
+// url() expects a route name or an external URI.
+// $gs_confirmation_message = '<img src="' . url('misc/watchdog-error.png') . '"/> ' . t('Unable to find ghotscript executable at !url', array('!url' => "<strong>$islandora_pdf_path_to_gs</strong>"));
+
   }
 
   $form = array();
@@ -49,7 +61,7 @@ function islandora_pdf_admin($form, &$form_state) {
     '#type' => 'checkbox',
     '#title' => t("Allow users to upload .txt files with PDFs"),
     '#description' => t("Uploaded text files are appended to PDFs as FULL_TEXT datastreams and are indexed into Solr."),
-    '#default_value' => variable_get('islandora_pdf_allow_text_upload', FALSE),
+    '#default_value' => \Drupal::config('islandora_pdf.settings')->get('islandora_pdf_allow_text_upload'),
   );
 
   $form['islandora_pdf_url_fieldset']['islandora_pdf_create_fulltext'] = array(
@@ -57,17 +69,17 @@ function islandora_pdf_admin($form, &$form_state) {
     '#title' => t("Extract text streams from PDFs using pdftotext"),
     '#description' => t("Extracted text streams are appended to PDFs as FULL_TEXT datastreams and are indexed into Solr. Uploading a text file takes priority over text stream extraction.
                            </br><strong>Note:</strong> PDFs that contain visible text do not necessarily contain text streams (e.g. images scanned and saved as PDFs). Consider converting text-filled images with no text streams to TIFFs and using the !book with !ocr enabled.", array(
-                             '!book' => l(t('Book Solution Pack'), 'https://wiki.duraspace.org/display/ISLANDORA711/Book+Solution+Pack'),
-                             '!ocr' => l(t('OCR'), 'https://wiki.duraspace.org/display/ISLANDORA711/Islandora+OCR'),
+                             '!book' => \Drupal::l(t('Book Solution Pack'), \Drupal\Core\Url::fromUri('https://wiki.duraspace.org/display/ISLANDORA711/Book+Solution+Pack')),
+                             '!ocr' => \Drupal::l(t('OCR'), \Drupal\Core\Url::fromUri('https://wiki.duraspace.org/display/ISLANDORA711/Islandora+OCR')),
                            )),
-    '#default_value' => variable_get('islandora_pdf_create_fulltext', FALSE),
+    '#default_value' => \Drupal::config('islandora_pdf.settings')->get('islandora_pdf_create_fulltext'),
   );
 
   $form['islandora_pdf_url_fieldset']['islandora_pdf_create_pdfa'] = array(
     '#type' => 'checkbox',
     '#title' => t("Create PDF/A archival derivative from PDF"),
     '#description' => t("Create a PDF/A version of any uploaded PDF. PDF/A is a restrictive standard that prohibits more easily broken components of the PDF spec, such as fillable forms and DRM. The PDF/A derivative will not be used for display. Requires ghostscript to be installed on the server."),
-    '#default_value' => variable_get('islandora_pdf_create_pdfa', FALSE),
+    '#default_value' => \Drupal::config('islandora_pdf.settings')->get('islandora_pdf_create_pdfa'),
   );
 
   $form['islandora_pdf_url_fieldset']['wrapper'] = array(
@@ -137,7 +149,7 @@ function islandora_pdf_admin($form, &$form_state) {
     '#title' => t('Width'),
     '#description' => t('The width of the thumbnail in pixels.'),
     '#element_validate' => array('element_validate_number'),
-    '#default_value' => variable_get('islandora_pdf_thumbnail_width', 200),
+    '#default_value' => \Drupal::config('islandora_pdf.settings')->get('islandora_pdf_thumbnail_width'),
     '#size' => 5,
   );
 
@@ -146,7 +158,7 @@ function islandora_pdf_admin($form, &$form_state) {
     '#title' => t('Height'),
     '#description' => t('The height of the thumbnail in pixels.'),
     '#element_validate' => array('element_validate_number'),
-    '#default_value' => variable_get('islandora_pdf_thumbnail_height', 200),
+    '#default_value' => \Drupal::config('islandora_pdf.settings')->get('islandora_pdf_thumbnail_height'),
     '#size' => 5,
   );
 
@@ -161,7 +173,7 @@ function islandora_pdf_admin($form, &$form_state) {
     '#title' => t('Max width'),
     '#description' => t('The maximum width of the preview in pixels.'),
     '#element_validate' => array('element_validate_number'),
-    '#default_value' => variable_get('islandora_pdf_preview_width', 500),
+    '#default_value' => \Drupal::config('islandora_pdf.settings')->get('islandora_pdf_preview_width'),
     '#size' => 5,
   );
 
@@ -170,7 +182,7 @@ function islandora_pdf_admin($form, &$form_state) {
     '#title' => t('Max height'),
     '#description' => t('The maximum height of the preview in pixels.'),
     '#element_validate' => array('element_validate_number'),
-    '#default_value' => variable_get('islandora_pdf_preview_height', 700),
+    '#default_value' => \Drupal::config('islandora_pdf.settings')->get('islandora_pdf_preview_height'),
     '#size' => 5,
   );
 
