@@ -9,3 +9,4 @@ stylesheets:
   all:
     - css/islandora_pdf.theme.css
 type: module
+php: '5.5.9'
