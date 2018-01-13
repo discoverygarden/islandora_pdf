@@ -32,20 +32,27 @@ Further documentation for this module is available at [our wiki](https://wiki.du
 
 ## Troubleshooting/Issues
 
-Having problems or solved a problem? Check out the Islandora google groups for a solution.
+Having problems or solved one? Create an issue, check out the Islandora Google
+groups.
 
-* [Islandora Group](https://groups.google.com/forum/?hl=en&fromgroups#!forum/islandora)
-* [Islandora Dev Group](https://groups.google.com/forum/?hl=en&fromgroups#!forum/islandora-dev)
+* [Users](https://groups.google.com/forum/?hl=en&fromgroups#!forum/islandora)
+* [Devs](https://groups.google.com/forum/?hl=en&fromgroups#!forum/islandora-dev)
+
+or contact [discoverygarden](http://support.discoverygarden.ca).
 
 ## Maintainers/Sponsors
 
 Current maintainers:
 
-* [Jonathan Green](https://github.com/jonathangreen)
+* [discoverygarden](http://www.discoverygarden.ca)
 
 ## Development
 
-If you would like to contribute to this module, please check out [CONTRIBUTING.md](CONTRIBUTING.md). In addition, we have helpful [Documentation for Developers](https://github.com/Islandora/islandora/wiki#wiki-documentation-for-developers) info, as well as our [Developers](http://islandora.ca/developers) section on the [Islandora.ca](http://islandora.ca) site.
+If you would like to contribute to this module, please check out the helpful
+[Documentation](https://github.com/Islandora/islandora/wiki#wiki-documentation-for-developers),
+[Developers](http://islandora.ca/developers) section on Islandora.ca and create
+an issue, pull request and or contact
+[discoverygarden](http://support.discoverygarden.ca).
 
 ## License
 
