@@ -2,13 +2,38 @@
 
 namespace Drupal\islandora_pdf\Form;
 
-use Drupal\islandora\Form\ModuleHandlerAdminForm;
+use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
+
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Module administration form.
  */
-class Admin extends ModuleHandlerAdminForm {
+class Admin extends FormBase {
+
+  /**
+   * Renderer instance.
+   *
+   * @var Drupal\Core\Render\RendererInterface
+   */
+  protected $renderer;
+
+  /**
+   * {@inheritdoc}
+   */
+  public function __construct(RendererInterface $renderer) {
+    $this->renderer = $renderer;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container) {
+    return new static(
+      $container->get('renderer')
+    );
+  }
 
   /**
    * {@inheritdoc}
@@ -47,17 +72,20 @@ class Admin extends ModuleHandlerAdminForm {
       $islandora_pdf_path_to_pdftotext = \Drupal::config('islandora_pdf.settings')->get('islandora_pdf_path_to_pdftotext');
     }
     exec($islandora_pdf_path_to_pdftotext, $output, $return_value);
-    // @FIXME
-  // url() expects a route name or an external URI.
-  // $pdftotext_confirmation_message = '<img src="' . url('misc/watchdog-ok.png') . '"/>'
-        . t('pdftotext executable found at !url', array('!url' => "<strong>$islandora_pdf_path_to_pdftotext</strong>"));
+    $pdftotext_confirmation_image = [
+      '#theme' => 'image',
+      '#uri' => '/core/misc/icons/73b355/check.svg',
+    ];
+    $pdftotext_confirmation_message = $this->renderer->render($pdftotext_confirmation_image)
+      . $this->t('pdftotext executable found at @url', ['@url' => "<strong>$islandora_pdf_path_to_pdftotext</strong>"]);
 
     if ($return_value != 99) {
-      // @FIXME
-  // url() expects a route name or an external URI.
-  // $pdftotext_confirmation_message = '<img src="' . url('misc/watchdog-error.png') . '"/> '
-          . t('Unable to find pdftotext executable at !url', array('!url' => "<strong>$islandora_pdf_path_to_pdftotext</strong>"));
-
+      $pdftotext_confirmation_image = [
+        '#theme' => 'image',
+        '#uri' => '/core/misc/icons/e32700/error.svg',
+      ];
+    $pdftotext_confirmation_message = $this->renderer->render($pdftotext_confirmation_image)
+      . t('Unable to find pdftotext executable at @url', array('@url' => "<strong>$islandora_pdf_path_to_pdftotext</strong>"));
     }
 
     if (isset($form_state['values']['islandora_pdf_path_to_gs'])) {
