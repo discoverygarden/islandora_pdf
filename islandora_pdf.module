@@ -6,23 +6,6 @@
  */
 
 /**
- * Implements hook_menu().
- */
-function islandora_pdf_menu() {
-  return array(
-    'admin/islandora/solution_pack_config/pdf' => array(
-      'title' => 'PDF Solution Pack',
-      'description' => 'Define ingest behavior and configure preview display.',
-      'page callback' => 'drupal_get_form',
-      'access arguments' => array('administer site configuration'),
-      'page arguments' => array('islandora_pdf_admin'),
-      'file' => 'includes/admin.form.inc',
-      'type' => MENU_NORMAL_ITEM,
-    ),
-  );
-}
-
-/**
  * Implements hook_theme().
  */
 function islandora_pdf_theme($existing, $type, $theme, $path) {

@@ -1,0 +1,7 @@
+islandora_pdf.admin:
+  path: '/admin/config/islandora/solution_pack_config/pdf'
+  defaults:
+    _title: 'PDF Solution Pack'
+    _form: '\Drupal\islandora_pdf\Form\Admin'
+  requirements:
+    _permission: 'administer site configuration'
