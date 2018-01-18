@@ -1,8 +1,8 @@
-# PDF Solution Pack [![Build Status](https://travis-ci.org/Islandora/islandora_solution_pack_pdf.png?branch=7.x)](https://travis-ci.org/Islandora/islandora_solution_pack_pdf)
+# PDF Solution Pack
 
 ## Introduction
 
-Loads all required Fedora Objects, and creates an empty collection object to accept PDFs.
+This module supports the ingest view and management of PDFs.
 
 ## Requirements
 
@@ -10,25 +10,32 @@ This module requires the following modules/libraries:
 
 * [Islandora](https://github.com/islandora/islandora)
 * [Tuque](https://github.com/islandora/tuque)
-* [ImageMagick](http://www.imagemagick.org/script/index.php) - Debian/Ubuntu `sudo apt-get install imagemagick`
+* [ImageMagick](http://www.imagemagick.org/script/index.php)
+  *  Debian/Ubuntu `sudo apt-get install imagemagick`
 * [ImageMagick module](https://www.drupal.org/project/imagemagick)
-    * ensure that the **full path** to Imagemagick's convert is specified in the Image Toolkit (admin/config/media/image-toolkit)
-* [pdftotext](http://poppler.freedesktop.org) -  Debian/Ubuntu `sudo apt-get install poppler-utils`
-* [ghostscript](http://www.ghostscript.com) - Debian/Ubuntu `sudo apt-get install ghostscript`
+  * configure the **path** to convert at (admin/config/media/image-toolkit)
+* [pdftotext](http://poppler.freedesktop.org)
+  * Debian/Ubuntu `sudo apt-get install poppler-utils`
+* [ghostscript](http://www.ghostscript.com)
+  * Debian/Ubuntu `sudo apt-get install ghostscript`
 
 ## Installation
 
-Install as usual, see [this](https://drupal.org/documentation/install/modules-themes/modules-7) for further information.
+Install as
+[usual](https://www.drupal.org/docs/8/extending-drupal-8/installing-drupal-8-modules).
 
 ## Configuration
 
-Configure thumbnail and preview image sizes, and set the path for `pdftotext` and `gs` if extract text stream and create PDFA derivative are selected, respectively, in Administration » Islandora »  Solution pack configuration »  PDF Solution Pack (admin/islandora/solution_pack_config/pdf).
+Configure thumbnail and preview image sizes, and set the path for `pdftotext`
+and `gs` if extract text stream and create PDFA derivative are selected,
+respectively, in admin/config/islandora/solution_pack_config/pdf.
 
 ![Configuration](https://raw.githubusercontent.com/dmoses/islandora_screenshots/master/pdf_sp_config.jpg)
 
 ## Documentation
 
-Further documentation for this module is available at [our wiki](https://wiki.duraspace.org/display/ISLANDORA/PDF+Solution+Pack).
+Further documentation for this module is available at
+[our wiki](https://wiki.duraspace.org/display/ISLANDORA/PDF+Solution+Pack).
 
 ## Troubleshooting/Issues
 
