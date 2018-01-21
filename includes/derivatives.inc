@@ -31,7 +31,7 @@ function islandora_pdf_get_derivative_source_as_unmanaged_file(AbstractObject $o
  * @param bool $force
  *   Whether the derivative generation is being forced or not.
  *
- * @return array|NULL
+ * @return array|null
  *   An array describing the outcome of the thumbnail creation or NULL if no
  *   derivatives are to be created or updated.
  *
@@ -56,7 +56,7 @@ function islandora_pdf_add_tn_derivative(AbstractObject $object, $force = FALSE)
  * @param bool $force
  *   Whether the derivative generation is being forced or not.
  *
- * @return array|NULL
+ * @return array|null
  *   An array describing the outcome of the FULL_TEXT datastream creation or
  *   NULL if no derivatives are to be created or updated.
  *
@@ -80,22 +80,22 @@ function islandora_pdf_add_fulltext_derivative(AbstractObject $object, $force = 
     $success = ($returncode === 0);
 
     if (!$success) {
-      $success = array(
+      $success = [
         'success' => FALSE,
-        'messages' => array(
-          array(
+        'messages' => [
+          [
             'message' => t('`%command` returned an error when creating %dsid derivative of PID %pid: %error'),
-            'message_sub' => array(
+            'message_sub' => [
               '%command' => $command,
               '%dsid' => $dsid,
               '%pid' => $object->id,
               '%error' => $execout,
-            ),
+            ],
             'type' => 'dsm',
             'severity' => WATCHDOG_ERROR,
-          ),
-        ),
-      );
+          ],
+        ],
+      ];
     }
     else {
       // Before we add this datastream let's rip out non valid XML characters.
@@ -104,31 +104,31 @@ function islandora_pdf_add_fulltext_derivative(AbstractObject $object, $force = 
       file_put_contents($derivative_file_uri, $sanitized_full_text);
       $success = islandora_pdf_add_datastream($object, $dsid, $derivative_file_uri);
       if ($success === TRUE) {
-        return array(
+        return [
           'success' => TRUE,
-          'messages' => array(
-            array(
+          'messages' => [
+            [
               'message' => t('Created FULL_TEXT derivative.'),
               'type' => 'dsm',
-            ),
-          ),
-        );
+            ],
+          ],
+        ];
       }
       else {
-        return array(
+        return [
           'success' => FALSE,
-          'messages' => array(
-            array(
+          'messages' => [
+            [
               'message' => t('Failed to create FULL_TEXT derivative for @pid. Error message: @error'),
-              'message_sub' => array(
+              'message_sub' => [
                 '@pid' => $object->id,
                 '@error' => $success,
-              ),
+              ],
               'type' => 'watchdog',
               'severity' => WATCHDOG_ERROR,
-            ),
-          ),
-        );
+            ],
+          ],
+        ];
       }
     }
     file_unmanaged_delete($temp);
@@ -156,51 +156,51 @@ function islandora_pdf_add_pdfa_derivative(AbstractObject $object, $force = FALS
   $success = ($returncode === 0);
 
   if (!$success) {
-    $success = array(
+    $success = [
       'success' => FALSE,
-      'messages' => array(
-        array(
+      'messages' => [
+        [
           'message' => t('`%command` returned an error when creating %dsid derivative of PID %pid: %error'),
-          'message_sub' => array(
+          'message_sub' => [
             '%command' => $command,
             '%dsid' => $dsid,
             '%pid' => $object->id,
             '%error' => $execout,
-          ),
+          ],
           'type' => 'dsm',
           'severity' => WATCHDOG_ERROR,
-        ),
-      ),
-    );
+        ],
+      ],
+    ];
   }
   else {
     $success = islandora_pdf_add_datastream($object, $dsid, $derivative_file_uri);
     if ($success === TRUE) {
-      return array(
+      return [
         'success' => TRUE,
-        'messages' => array(
-          array(
+        'messages' => [
+          [
             'message' => t('Created PDFA derivative.'),
             'type' => 'dsm',
-          ),
-        ),
-      );
+          ],
+        ],
+      ];
     }
     else {
-      return array(
+      return [
         'success' => FALSE,
-        'messages' => array(
-          array(
+        'messages' => [
+          [
             'message' => t('Failed to create PDFA derivative for @pid. Error message: @error'),
-            'message_sub' => array(
+            'message_sub' => [
               '@pid' => $object->id,
               '@error' => $success,
-            ),
+            ],
             'type' => 'watchdog',
             'severity' => WATCHDOG_ERROR,
-          ),
-        ),
-      );
+          ],
+        ],
+      ];
     }
   }
   file_unmanaged_delete($temp);
@@ -215,7 +215,7 @@ function islandora_pdf_add_pdfa_derivative(AbstractObject $object, $force = FALS
  * @param bool $force
  *   Whether the derivative generation is being forced or not.
  *
- * @return array|NULL
+ * @return array|null
  *   An array describing the outcome of the PREVIEW datastream creation or NULL
  *   if no derivatives are to be created or updated.
  *
@@ -248,7 +248,7 @@ function islandora_pdf_add_preview_derivative(AbstractObject $object, $force = F
  * @param bool $force
  *   Whether the derivative generation is being forced or not.
  *
- * @return array|NULL
+ * @return array|null
  *   An array describing the outcome of adding the JPG derivative or NULL if no
  *   derivatives are to be created or updated.
  *
@@ -266,36 +266,36 @@ function islandora_pdf_add_jpg_derivative(AbstractObject $object, $file_uri, $ds
       $success = islandora_pdf_add_datastream($object, $dsid, $derivative_file_uri);
       file_unmanaged_delete($derivative_file_uri);
       if ($success === TRUE) {
-        return array(
+        return [
           'success' => TRUE,
-          'messages' => array(
-            array(
+          'messages' => [
+            [
               'message' => t('Created JPG derivative for @dsid (@pid).'),
-              'message_sub' => array(
+              'message_sub' => [
                 '@dsid' => $dsid,
                 '@pid' => $object->id,
-              ),
+              ],
               'type' => 'dsm',
-            ),
-          ),
-        );
+            ],
+          ],
+        ];
       }
       else {
-        return array(
+        return [
           'success' => FALSE,
-          'messages' => array(
-            array(
+          'messages' => [
+            [
               'message' => t('Failed to create JPG derivative for @dsid (@pid). Error message: @message'),
-              'message_sub' => array(
+              'message_sub' => [
                 '@dsid' => $dsid,
                 '@pid' => $object->id,
                 '@message' => $success,
-              ),
+              ],
               'type' => 'watchdog',
               'severity' => WATCHDOG_ERROR,
-            ),
-          ),
-        );
+            ],
+          ],
+        ];
       }
     }
     else {
@@ -323,7 +323,7 @@ function islandora_pdf_add_jpg_derivative(AbstractObject $object, $file_uri, $ds
  */
 function islandora_pdf_create_jpg_derivative($file_uri, $dsid, $width, $height) {
   $source = \Drupal::service("file_system")->realpath($file_uri) . '[0]';
-  $matches = array();
+  $matches = [];
   // Get the base name of the source file.
   $base = pathinfo($source, PATHINFO_FILENAME);
   $temp = file_create_filename("$base.$dsid.jpg", 'temporary://');
@@ -337,10 +337,10 @@ function islandora_pdf_create_jpg_derivative($file_uri, $dsid, $width, $height) 
   $args['previewsize'] = '-resize ' . escapeshellarg("{$width}x{$height}");
   $args['colors'] = '-colorspace RGB';
   $args['flatten'] = '-flatten';
-  $context = array(
+  $context = [
     'source' => $source,
     'destination' => $dest,
-  );
+  ];
   \Drupal::moduleHandler()->alter('imagemagick_arguments', $args, $context);
   // To make use of ImageMagick 6's parenthetical command grouping we need to
   // make the $source image the first parameter and $dest the last.
@@ -349,21 +349,21 @@ function islandora_pdf_create_jpg_derivative($file_uri, $dsid, $width, $height) 
   $output = '';
   $ret = -1;
   if (_imagemagick_convert_exec($command, $output, $ret) !== TRUE) {
-    return array(
+    return [
       'success' => FALSE,
-      'messages' => array(
-        array(
+      'messages' => [
+        [
           'message' => t('ImageMagick failed to create derivatives for @pid<br/>Error: @ret<br/>Command: @command<br/>Output: @output'),
-          'message_sub' => array(
+          'message_sub' => [
             '@ret' => $ret,
             '@command' => $command,
             '@output' => $output,
-          ),
+          ],
           'type' => 'watchdog',
           'severity' => WATCHDOG_ERROR,
-        ),
-      ),
-    );
+        ],
+      ],
+    ];
   }
   return $temp;
 }
@@ -381,7 +381,7 @@ function islandora_pdf_create_jpg_derivative($file_uri, $dsid, $width, $height) 
  * @return bool|string
  *   TRUE if successfully added/modified the datastream, error message if not.
  */
-function islandora_pdf_add_datastream($object, $datastream_id, $file_uri) {
+function islandora_pdf_add_datastream(AbstractObject $object, $datastream_id, $file_uri) {
   $return = TRUE;
   try {
     $ingest = !isset($object[$datastream_id]);
@@ -420,15 +420,15 @@ function islandora_pdf_add_datastream($object, $datastream_id, $file_uri) {
  * @see hook_islandora_derivative()
  */
 function islandora_pdf_missing_obj_datastream($pid) {
-  return array(
+  return [
     'success' => FALSE,
-    'messages' => array(
-      array(
+    'messages' => [
+      [
         'message' => t('Could not create image derivatives for %s. No image file was uploaded.'),
-        'message_sub' => array('%s' => $pid),
+        'message_sub' => ['%s' => $pid],
         'type' => 'watchdog',
         'severity' => WATCHDOG_ERROR,
-      ),
-    ),
-  );
+      ],
+    ],
+  ];
 }

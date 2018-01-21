@@ -5,6 +5,8 @@ namespace Drupal\islandora_pdf\Form;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\RendererInterface;
+use Drupal\Core\Url;
+use Drupal\Core\Link;
 
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -78,7 +80,7 @@ class Admin extends FormBase {
       $islandora_pdf_path_to_pdftotext = $form_state->getValue('islandora_pdf_path_to_pdftotext');
     }
     else {
-      $islandora_pdf_path_to_pdftotext = \Drupal::config('islandora_pdf.settings')->get('islandora_pdf_path_to_pdftotext');
+      $islandora_pdf_path_to_pdftotext = $this->config('islandora_pdf.settings')->get('islandora_pdf_path_to_pdftotext');
     }
     exec($islandora_pdf_path_to_pdftotext, $output, $return_value);
     $pdftotext_confirmation_image = [
@@ -101,7 +103,7 @@ class Admin extends FormBase {
       $islandora_pdf_path_to_gs = $form_state->getValue('islandora_pdf_path_to_gs');
     }
     else {
-      $islandora_pdf_path_to_gs = \Drupal::config('islandora_pdf.settings')->get('islandora_pdf_path_to_gs');
+      $islandora_pdf_path_to_gs = $this->config('islandora_pdf.settings')->get('islandora_pdf_path_to_gs');
     }
     $gs_test_command = $islandora_pdf_path_to_gs . ' --help';
     exec($gs_test_command, $output, $return_value);
@@ -133,7 +135,7 @@ class Admin extends FormBase {
       '#type' => 'checkbox',
       '#title' => $this->t("Allow users to upload .txt files with PDFs"),
       '#description' => $this->t("Uploaded text files are appended to PDFs as FULL_TEXT datastreams and are indexed into Solr."),
-      '#default_value' => \Drupal::config('islandora_pdf.settings')->get('islandora_pdf_allow_text_upload'),
+      '#default_value' => $this->config('islandora_pdf.settings')->get('islandora_pdf_allow_text_upload'),
     ];
 
     $form['islandora_pdf_url_fieldset']['islandora_pdf_create_fulltext'] = [
@@ -141,17 +143,17 @@ class Admin extends FormBase {
       '#title' => $this->t("Extract text streams from PDFs using pdftotext"),
       '#description' => $this->t("Extracted text streams are appended to PDFs as FULL_TEXT datastreams and are indexed into Solr. Uploading a text file takes priority over text stream extraction.
                              </br><strong>Note:</strong> PDFs that contain visible text do not necessarily contain text streams (e.g. images scanned and saved as PDFs). Consider converting text-filled images with no text streams to TIFFs and using the @book with @ocr enabled.", [
-                               '@book' => \Drupal::l($this->t('Book Solution Pack'), \Drupal\Core\Url::fromUri('https://wiki.duraspace.org/display/ISLANDORA711/Book+Solution+Pack')),
-                               '@ocr' => \Drupal::l($this->t('OCR'), \Drupal\Core\Url::fromUri('https://wiki.duraspace.org/display/ISLANDORA711/Islandora+OCR')),
+                               '@book' => Link::fromTextAndUrl($this->t('Book Solution Pack'), Url::fromUri('https://wiki.duraspace.org/display/ISLANDORA711/Book+Solution+Pack'))->toString(),
+                               '@ocr' => Link::fromTextAndUrl($this->t('OCR'), Url::fromUri('https://wiki.duraspace.org/display/ISLANDORA711/Islandora+OCR'))->toString(),
                              ]),
-      '#default_value' => \Drupal::config('islandora_pdf.settings')->get('islandora_pdf_create_fulltext'),
+      '#default_value' => $this->config('islandora_pdf.settings')->get('islandora_pdf_create_fulltext'),
     ];
 
     $form['islandora_pdf_url_fieldset']['islandora_pdf_create_pdfa'] = [
       '#type' => 'checkbox',
       '#title' => $this->t("Create PDF/A archival derivative from PDF"),
       '#description' => $this->t("Create a PDF/A version of any uploaded PDF. PDF/A is a restrictive standard that prohibits more easily broken components of the PDF spec, such as fillable forms and DRM. The PDF/A derivative will not be used for display. Requires ghostscript to be installed on the server."),
-      '#default_value' => \Drupal::config('islandora_pdf.settings')->get('islandora_pdf_create_pdfa'),
+      '#default_value' => $this->config('islandora_pdf.settings')->get('islandora_pdf_create_pdfa'),
     ];
 
     $form['islandora_pdf_url_fieldset']['wrapper'] = [
@@ -222,7 +224,7 @@ class Admin extends FormBase {
       '#title' => $this->t('Width'),
       '#description' => $this->t('The width of the thumbnail in pixels.'),
       '#element_validate' => ['element_validate_number'],
-      '#default_value' => \Drupal::config('islandora_pdf.settings')->get('islandora_pdf_thumbnail_width'),
+      '#default_value' => $this->config('islandora_pdf.settings')->get('islandora_pdf_thumbnail_width'),
       '#size' => 5,
     ];
 
@@ -231,7 +233,7 @@ class Admin extends FormBase {
       '#title' => $this->t('Height'),
       '#description' => $this->t('The height of the thumbnail in pixels.'),
       '#element_validate' => ['element_validate_number'],
-      '#default_value' => \Drupal::config('islandora_pdf.settings')->get('islandora_pdf_thumbnail_height'),
+      '#default_value' => $this->config('islandora_pdf.settings')->get('islandora_pdf_thumbnail_height'),
       '#size' => 5,
     ];
 
@@ -246,7 +248,7 @@ class Admin extends FormBase {
       '#title' => $this->t('Max width'),
       '#description' => $this->t('The maximum width of the preview in pixels.'),
       '#element_validate' => ['element_validate_number'],
-      '#default_value' => \Drupal::config('islandora_pdf.settings')->get('islandora_pdf_preview_width'),
+      '#default_value' => $this->config('islandora_pdf.settings')->get('islandora_pdf_preview_width'),
       '#size' => 5,
     ];
 
@@ -255,7 +257,7 @@ class Admin extends FormBase {
       '#title' => $this->t('Max height'),
       '#description' => $this->t('The maximum height of the preview in pixels.'),
       '#element_validate' => ['element_validate_number'],
-      '#default_value' => \Drupal::config('islandora_pdf.settings')->get('islandora_pdf_preview_height'),
+      '#default_value' => $this->config('islandora_pdf.settings')->get('islandora_pdf_preview_height'),
       '#size' => 5,
     ];
 
