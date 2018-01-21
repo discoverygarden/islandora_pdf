@@ -2,7 +2,7 @@
 
 namespace Drupal\islandora_pdf\Form;
 
-use Drupal\Core\Form\FormBase;
+use Drupal\islandora\Form\ModuleHandlerAdminForm;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\RendererInterface;
 use Drupal\Core\Url;
@@ -13,7 +13,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 /**
  * Module administration form.
  */
-class Admin extends FormBase {
+class Admin extends ModuleHandlerAdminForm {
 
   /**
    * Renderer instance.
@@ -220,19 +220,19 @@ class Admin extends FormBase {
     ];
 
     $form['islandora_pdf_thumbnail_fieldset']['islandora_pdf_thumbnail_width'] = [
-      '#type' => 'textfield',
+      '#type' => 'number',
+      '#min' => 0,
       '#title' => $this->t('Width'),
       '#description' => $this->t('The width of the thumbnail in pixels.'),
-      '#element_validate' => ['element_validate_number'],
       '#default_value' => $this->config('islandora_pdf.settings')->get('islandora_pdf_thumbnail_width'),
       '#size' => 5,
     ];
 
     $form['islandora_pdf_thumbnail_fieldset']['islandora_pdf_thumbnail_height'] = [
-      '#type' => 'textfield',
+      '#type' => 'number',
+      '#min' => 0,
       '#title' => $this->t('Height'),
       '#description' => $this->t('The height of the thumbnail in pixels.'),
-      '#element_validate' => ['element_validate_number'],
       '#default_value' => $this->config('islandora_pdf.settings')->get('islandora_pdf_thumbnail_height'),
       '#size' => 5,
     ];
@@ -244,25 +244,30 @@ class Admin extends FormBase {
     ];
 
     $form['islandora_pdf_preview_fieldset']['islandora_pdf_preview_width'] = [
-      '#type' => 'textfield',
+      '#type' => 'number',
+      '#min' => 0,
       '#title' => $this->t('Max width'),
       '#description' => $this->t('The maximum width of the preview in pixels.'),
-      '#element_validate' => ['element_validate_number'],
       '#default_value' => $this->config('islandora_pdf.settings')->get('islandora_pdf_preview_width'),
       '#size' => 5,
     ];
 
     $form['islandora_pdf_preview_fieldset']['islandora_pdf_preview_height'] = [
-      '#type' => 'textfield',
+      '#type' => 'number',
+      '#min' => 0,
       '#title' => $this->t('Max height'),
       '#description' => $this->t('The maximum height of the preview in pixels.'),
-      '#element_validate' => ['element_validate_number'],
       '#default_value' => $this->config('islandora_pdf.settings')->get('islandora_pdf_preview_height'),
       '#size' => 5,
     ];
 
     module_load_include('inc', 'islandora', 'includes/solution_packs');
     $form += islandora_viewers_form('islandora_pdf_viewers', 'application/pdf');
+    $form['submit'] = [
+      '#type' => 'submit',
+      '#name' => 'islandora-pdf-submit',
+      '#value' => $this->t('Submit'),
+    ];
     return $form;
   }
 
