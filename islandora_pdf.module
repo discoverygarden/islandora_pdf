@@ -140,7 +140,7 @@ function islandora_pdf_islandora_sp_pdf_islandora_ingest_steps() {
     'islandora_pdf_file_upload' => [
       'weight' => 10,
       'type' => 'form',
-      'form_id' => 'Drupal\islandora_pdf\Form\PdfUploadForm',
+      'form_class' => 'Drupal\islandora_pdf\Form\PdfUploadForm',
       'module' => 'islandora_pdf',
     ],
   ];

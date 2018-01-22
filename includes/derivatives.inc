@@ -5,6 +5,8 @@
  * Contains all the functions required for adding derivatives for the PDF SP.
  */
 
+use Drupal\islandora\MimeDetect;
+
 /**
  * Gets the source of all derivatives as an unmanaged file.
  *
