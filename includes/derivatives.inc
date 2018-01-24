@@ -5,6 +5,8 @@
  * Contains all the functions required for adding derivatives for the PDF SP.
  */
 
+use Drupal\imagemagick\ImagemagickExecArguments;
+
 use Drupal\islandora\MimeDetect;
 
 /**
@@ -324,33 +326,27 @@ function islandora_pdf_add_jpg_derivative(AbstractObject $object, $file_uri, $ds
  * @see hook_islandora_derivative()
  */
 function islandora_pdf_create_jpg_derivative($file_uri, $dsid, $width, $height) {
-  $source = \Drupal::service("file_system")->realpath($file_uri) . '[0]';
+  $source = \Drupal::service("file_system")->realpath($file_uri);
   $matches = [];
   // Get the base name of the source file.
   $base = pathinfo($source, PATHINFO_FILENAME);
   $temp = file_create_filename("$base.$dsid.jpg", 'temporary://');
-  $dest = \Drupal::service("file_system")->realpath($temp);
-  // @FIXME
-// // @FIXME
-// // This looks like another module's variable. You'll need to rewrite this call
-// // to ensure that it uses the correct configuration object.
-// $args['quality'] = '-quality ' . escapeshellarg(variable_get('imagemagick_quality', 75));
+  $dest = \Drupal::service('file_system')->realpath($temp);
+  $exec_manager = \Drupal::service('imagemagick.exec_manager');
 
-  $args['previewsize'] = '-resize ' . escapeshellarg("{$width}x{$height}");
-  $args['colors'] = '-colorspace RGB';
-  $args['flatten'] = '-flatten';
-  $context = [
-    'source' => $source,
-    'destination' => $dest,
-  ];
-  \Drupal::moduleHandler()->alter('imagemagick_arguments', $args, $context);
-  // To make use of ImageMagick 6's parenthetical command grouping we need to
-  // make the $source image the first parameter and $dest the last.
-  // See http://www.imagemagick.org/Usage/basics/#cmdline
-  $command = escapeshellarg($source) . ' ' . implode(' ', $args) . ' ' . escapeshellarg("jpg:$dest");
+  $args = new ImagemagickExecArguments($exec_manager);
+  $args->setSourceLocalPath($source);
+  $args->setDestinationLocalPath($dest);
+  $args->setSourceFrames('[0]');
+  $args->addArgument('-resize ' . $args->escapeShellArg("{$width}x{$height}"));
+  $args->addArgument('-colorspace RGB');
+  $args->addArgument('-flatten');
+
+  $command = 'convert';
+  \Drupal::moduleHandler()->alter('imagemagick_arguments', $args, $command);
   $output = '';
   $ret = -1;
-  if (_imagemagick_convert_exec($command, $output, $ret) !== TRUE) {
+  if ($exec_manager->execute($command, $args, $output, $ret) !== TRUE) {
     return [
       'success' => FALSE,
       'messages' => [
