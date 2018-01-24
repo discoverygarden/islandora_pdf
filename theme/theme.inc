@@ -20,15 +20,12 @@ use Drupal\islandora\DublinCore;
  *   - islandora_object: An AbstractObject from Islandora.
  */
 function template_preprocess_islandora_pdf(array &$variables) {
-  global $base_url;
-
   module_load_include('inc', 'islandora', 'includes/solution_packs');
   module_load_include('inc', 'islandora', 'includes/datastream');
   module_load_include('inc', 'islandora', 'includes/utilities');
   module_load_include('inc', 'islandora', 'includes/metadata');
 
   $islandora_object = $variables['islandora_object'];
-  $repository = $islandora_object->repository;
 
   // We should eventually remove the DC object and dc_array code as it only
   // exists to not break legacy implementations.
@@ -105,7 +102,7 @@ function template_preprocess_islandora_pdf(array &$variables) {
  *   An associative array containing:
  *   - islandora_object: An AbstractObject from Islandora.
  */
-function template_preprocess_islandora_pdf_print(&$variables) {
+function template_preprocess_islandora_pdf_print(array &$variables) {
   $islandora_object = $variables['islandora_object'];
   if (isset($islandora_object['PREVIEW'])) {
     $img = [

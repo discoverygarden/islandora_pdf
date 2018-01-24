@@ -61,7 +61,7 @@ class PdfUploadForm extends FormBase {
       ],
     ];
 
-    if (\Drupal::config('islandora_pdf.settings')->get('islandora_pdf_allow_text_upload')) {
+    if ($this->config('islandora_pdf.settings')->get('islandora_pdf_allow_text_upload')) {
       $form['islandora_pdf_text_upload'] = [
         '#type' => 'checkbox',
         '#title' => $this->t("Add text file to this upload?"),
