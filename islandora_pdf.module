@@ -12,13 +12,11 @@ function islandora_pdf_theme($existing, $type, $theme, $path) {
   return [
     'islandora_pdf' => [
       'file' => 'theme/theme.inc',
-      'template' => 'theme/islandora-pdf',
       'pattern' => 'islandora_pdf__',
       'variables' => ['islandora_object' => NULL],
     ],
     'islandora_pdf_print' => [
       'file' => 'theme/theme.inc',
-      'template' => 'theme/islandora-pdf-print',
       'pattern' => 'islandora_pdf_print__',
       'variables' => ['islandora_object' => NULL],
     ],
@@ -74,34 +72,22 @@ function islandora_pdf_islandora_required_objects(IslandoraTuque $connection) {
  * Implements hook_CMODEL_PID_islandora_view_object().
  */
 function islandora_pdf_islandora_sp_pdf_islandora_view_object($object, $page_number, $page_size) {
-  // @FIXME
-// theme() has been renamed to _theme() and should NEVER be called directly.
-// Calling _theme() directly can alter the expected output and potentially
-// introduce security issues (see https://www.drupal.org/node/2195739). You
-// should use renderable arrays instead.
-//
-//
-// @see https://www.drupal.org/node/2195739
-// $output = theme('islandora_pdf', array('islandora_object' => $object));
-
-  return ['' => $output];
+  return [
+    '#theme' => 'islandora_pdf',
+    '#islandora_object' => $object,
+  ];
 }
 
 /**
  * Implements hook_islandora_view_print_object().
  */
 function islandora_pdf_islandora_view_print_object($object) {
-  // @FIXME
-// theme() has been renamed to _theme() and should NEVER be called directly.
-// Calling _theme() directly can alter the expected output and potentially
-// introduce security issues (see https://www.drupal.org/node/2195739). You
-// should use renderable arrays instead.
-//
-//
-// @see https://www.drupal.org/node/2195739
-// $output = theme('islandora_pdf_print', array('islandora_object' => $object));
-
-  return ['pdf' => $output];
+  return [
+    'pdf' => [
+      '#theme' => 'islandora_pdf_print',
+      '#islandora_object' => $object,
+    ],
+  ];
 }
 
 /**

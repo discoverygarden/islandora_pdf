@@ -5,6 +5,11 @@
  * This file contains all theme and preprocess functions.
  */
 
+use Drupal\Core\Link;
+use Drupal\Core\Url;
+
+use Drupal\islandora\DublinCore;
+
 /**
  * Prepares variables for islandora-pdf templates.
  *
@@ -15,29 +20,15 @@
  *   - islandora_object: An AbstractObject from Islandora.
  */
 function template_preprocess_islandora_pdf(array &$variables) {
-  // @FIXME
-// The Assets API has totally changed. CSS, JavaScript, and libraries are now
-// attached directly to render arrays using the #attached property.
-//
-//
-// @see https://www.drupal.org/node/2169605
-// @see https://www.drupal.org/node/2408597
-// drupal_add_js('misc/form.js');
+  global $base_url;
 
-  // @FIXME
-// The Assets API has totally changed. CSS, JavaScript, and libraries are now
-// attached directly to render arrays using the #attached property.
-//
-//
-// @see https://www.drupal.org/node/2169605
-// @see https://www.drupal.org/node/2408597
-// drupal_add_js('misc/collapse.js');
-
-  $islandora_object = $variables['islandora_object'];
-  $repository = $islandora_object->repository;
+  module_load_include('inc', 'islandora', 'includes/solution_packs');
   module_load_include('inc', 'islandora', 'includes/datastream');
   module_load_include('inc', 'islandora', 'includes/utilities');
   module_load_include('inc', 'islandora', 'includes/metadata');
+
+  $islandora_object = $variables['islandora_object'];
+  $repository = $islandora_object->repository;
 
   // We should eventually remove the DC object and dc_array code as it only
   // exists to not break legacy implementations.
@@ -48,20 +39,17 @@ function template_preprocess_islandora_pdf(array &$variables) {
     }
   }
   catch (Exception $e) {
-    drupal_set_message(t('Error retrieving object %s %t', array('%s' => $islandora_object->id, '%t' => $e->getMessage())), 'error', FALSE);
+    drupal_set_message(t('Error retrieving object %s %t', ['%s' => $islandora_object->id, '%t' => $e->getMessage()]), 'error', FALSE);
   }
   $variables['islandora_dublin_core'] = isset($dc_object) ? $dc_object : NULL;
-  $variables['dc_array'] = isset($dc_object) ? $dc_object->asArray() : array();
+  $variables['dc_array'] = isset($dc_object) ? $dc_object->asArray() : [];
   $variables['islandora_object_label'] = $islandora_object->label;
   $variables['theme_hook_suggestions'][] = 'islandora_pdf__' . str_replace(':', '_', $islandora_object->id);
   $variables['parent_collections'] = islandora_get_parents_from_rels_ext($islandora_object);
   $variables['metadata'] = islandora_retrieve_metadata_markup($islandora_object);
   $variables['description'] = islandora_retrieve_description_markup($islandora_object);
 
-  global $base_url;
-
-  module_load_include('inc', 'islandora', 'includes/solution_packs');
-  $viewer = islandora_get_viewer(array(), 'islandora_pdf_viewers', $islandora_object);
+  $viewer = islandora_get_viewer([], 'islandora_pdf_viewers', $islandora_object);
 
   if ($viewer) {
     $variables['islandora_content'] = $viewer;
@@ -69,70 +57,41 @@ function template_preprocess_islandora_pdf(array &$variables) {
   else {
     // Full size url.
     if (isset($islandora_object['OBJ']) && islandora_datastream_access(ISLANDORA_VIEW_OBJECTS, $islandora_object['OBJ'])) {
-      // @FIXME
-// url() expects a route name or an external URI.
-// $full_size_url = url("islandora/object/{$islandora_object->id}/datastream/OBJ/view", array('absolute' => TRUE));
-
-      $variables['islandora_full_url'] = $full_size_url;
+      $islandora_full_url = Url::fromRoute('islandora.view_datastream_view', ['object' => $islandora_object->id, 'datastream' => 'OBJ']);
+      $variables['islandora_full_url'] = $islandora_full_url->toString();
 
       // Sanitize this object name a bit and provide download link.
       $sanitized_label = preg_replace('/[^A-Za-z0-9_\-]|\.pdf$/', '_', $islandora_object->label);
-      $download_url = 'islandora/object/' . $islandora_object->id . '/datastream/OBJ/download/' . $sanitized_label . '.pdf';
-      $download_text = t("Download pdf");
-      // @FIXME
-// l() expects a Url object, created from a route name or external URI.
-// $variables['islandora_download_link'] = l($download_text, $download_url, array('attributes' => array('class' => array('islandora-pdf-link'))));
-
+      $download_url = Url::fromUserInput("/islandora/object/{$islandora_object->id}/datastream/OBJ/download/{$sanitized_label}.pdf");
+      $download_url->setOptions(['attributes' => ['class' => ['islandora-pdf-link']]]);
+      $islandora_download_link = Link::fromTextAndUrl(
+        t("Download pdf"),
+        $download_url
+      );
+      $variables['islandora_download_link'] = $islandora_download_link->toString();
     }
 
     // Thumbnail.
     if (isset($islandora_object['TN'])) {
-      // @FIXME
-// url() expects a route name or an external URI.
-// $thumbnail_size_url = url("islandora/object/{$islandora_object->id}/datastream/TN/view");
-
-      $params = array(
-        'title' => $islandora_object->label,
-        'path' => $thumbnail_size_url,
-      );
-      // @FIXME
-// theme() has been renamed to _theme() and should NEVER be called directly.
-// Calling _theme() directly can alter the expected output and potentially
-// introduce security issues (see https://www.drupal.org/node/2195739). You
-// should use renderable arrays instead.
-//
-//
-// @see https://www.drupal.org/node/2195739
-// $variables['islandora_thumbnail_img'] = theme('image', $params);
-
+      $img = [
+        '#title' => $islandora_object->label,
+        '#theme' => 'image',
+        '#uri' => Url::fromRoute('islandora.view_datastream_view', ['object' => $islandora_object->id, 'datastream' => 'TN'])->toString(),
+      ];
+      $variables['islandora_thumbnail_img'] = \Drupal::service("renderer")->render($img);
     }
 
     // Preview image + link.
     if (isset($islandora_object['PREVIEW']) && islandora_datastream_access(ISLANDORA_VIEW_OBJECTS, $islandora_object['PREVIEW'])) {
-      // @FIXME
-// url() expects a route name or an external URI.
-// $preview_url = url("islandora/object/{$islandora_object->id}/datastream/PREVIEW/view");
+      $img = [
+        '#title' => $islandora_object->label,
+        '#theme' => 'image',
+        '#uri' => Url::fromRoute('islandora.view_datastream_view', ['object' => $islandora_object->id, 'datastream' => 'PREVIEW'])->toString(),
+      ];
+      $variables['islandora_preview_img'] = \Drupal::service("renderer")->render($img);
 
-      $params = array(
-        'title' => $islandora_object->label,
-        'path' => $preview_url,
-      );
-
-      // @FIXME
-// theme() has been renamed to _theme() and should NEVER be called directly.
-// Calling _theme() directly can alter the expected output and potentially
-// introduce security issues (see https://www.drupal.org/node/2195739). You
-// should use renderable arrays instead.
-//
-//
-// @see https://www.drupal.org/node/2195739
-// $variables['islandora_preview_img'] = theme('image', $params);
-
-      // @FIXME
-// l() expects a Url object, created from a route name or external URI.
-// $variables['islandora_content'] = isset($variables['islandora_full_url']) ? l($variables['islandora_preview_img'], $variables['islandora_full_url'], array('html' => TRUE)) :
+      $variables['islandora_content'] = isset($islandora_full_url) ? Link::fromTextAndUrl($variables['islandora_preview_img'], $islandora_full_url) :
         $variables['islandora_preview_img'];
-
     }
   }
 }
@@ -149,23 +108,11 @@ function template_preprocess_islandora_pdf(array &$variables) {
 function template_preprocess_islandora_pdf_print(&$variables) {
   $islandora_object = $variables['islandora_object'];
   if (isset($islandora_object['PREVIEW'])) {
-    // @FIXME
-// url() expects a route name or an external URI.
-// $preview_url = url("islandora/object/{$islandora_object->id}/datastream/PREVIEW/view");
-
-    $params = array(
-      'title' => $islandora_object->label,
-      'path' => $preview_url,
-    );
-    // @FIXME
-// theme() has been renamed to _theme() and should NEVER be called directly.
-// Calling _theme() directly can alter the expected output and potentially
-// introduce security issues (see https://www.drupal.org/node/2195739). You
-// should use renderable arrays instead.
-//
-//
-// @see https://www.drupal.org/node/2195739
-// $variables['islandora_preview_img'] = theme('image', $params);
-
+    $img = [
+      '#title' => $islandora_object->label,
+      '#theme' => 'image',
+      '#uri' => Url::fromRoute('islandora.view_datastream_view', ['object' => $islandora_object->id, 'datastream' => 'PREVIEW'])->toString(),
+    ];
+    $variables['islandora_preview_img'] = \Drupal::service("renderer")->render($img);
   }
 }
