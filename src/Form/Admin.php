@@ -172,7 +172,7 @@ class Admin extends ModuleHandlerAdminForm {
         'callback' => 'islandora_update_pdftotext_url_div',
         'wrapper' => 'islandora-url',
         'effect' => 'fade',
-        'event' => 'blur',
+        'event' => 'change',
         'progress' => ['type' => 'throbber'],
       ],
       '#states' => [
@@ -191,7 +191,7 @@ class Admin extends ModuleHandlerAdminForm {
         'callback' => 'islandora_update_gs_url_div',
         'wrapper' => 'islandora-url',
         'effect' => 'fade',
-        'event' => 'blur',
+        'event' => 'change',
         'progress' => ['type' => 'throbber'],
       ],
       '#states' => [
