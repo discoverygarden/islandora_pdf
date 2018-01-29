@@ -5,8 +5,5 @@ dependencies:
   - :imagemagick
 package: 'Islandora Solution Packs'
 core: 8.x
-stylesheets:
-  all:
-    - css/islandora_pdf.theme.css
 type: module
 php: '5.5.9'
