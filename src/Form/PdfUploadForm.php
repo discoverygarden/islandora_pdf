@@ -67,18 +67,21 @@ class PdfUploadForm extends FormBase {
         '#title' => $this->t("Add text file to this upload?"),
         '#default_value' => FALSE,
       ];
-      $form['text'] = [
-        '#title' => $this->t('PDF text'),
-        '#type' => 'managed_file',
-        '#required' => FALSE,
-        '#description' => $this->t('Select text file to upload.<br/>Files must be less than <strong>@size MB.</strong><br/>Allowed file types: <strong>@ext.</strong><br />This file is optional.', ['@size' => $upload_size, '@ext' => 'txt']),
-        '#default_value' => $form_state->getValue('text') ? $form_state->getValue('text') : NULL,
-        '#upload_location' => 'temporary://',
-        '#upload_validators' => [
-          'file_validate_extensions' => ['txt'],
-          // Assume it's specified in MB.
-          'file_validate_size' => [$upload_size * 1024 * 1024],
+      $form['text_section'] = [
+        'text' => [
+          '#title' => $this->t('PDF text'),
+          '#type' => 'managed_file',
+          '#required' => FALSE,
+          '#description' => $this->t('Select text file to upload.<br/>Files must be less than <strong>@size MB.</strong><br/>Allowed file types: <strong>@ext.</strong><br />This file is optional.', ['@size' => $upload_size, '@ext' => 'txt']),
+          '#default_value' => $form_state->getValue('text') ? $form_state->getValue('text') : NULL,
+          '#upload_location' => 'temporary://',
+          '#upload_validators' => [
+            'file_validate_extensions' => ['txt'],
+            // Assume it's specified in MB.
+            'file_validate_size' => [$upload_size * 1024 * 1024],
+          ],
         ],
+        '#type' => 'item',
         '#states' => [
           'visible' => [
             ':input[name="islandora_pdf_text_upload"]' => ['checked' => TRUE],
@@ -118,7 +121,7 @@ class PdfUploadForm extends FormBase {
       else {
         $ds = $object['FULL_TEXT'];
       }
-      $text_file = $this->fileEntityStorage->load(reset($form_state->getValue('file')));
+      $text_file = $this->fileEntityStorage->load(reset($form_state->getValue('text')));
       $ds->setContentFromFile($text_file->getFileUri(), FALSE);
       $ds->label = $text_file->getFilename();
       $ds->mimetype = $text_file->getMimeType();
