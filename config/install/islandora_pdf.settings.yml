@@ -1,0 +1,9 @@
+islandora_pdf_thumbnail_width: 200
+islandora_pdf_thumbnail_height: 200
+islandora_pdf_path_to_pdftotext: /usr/bin/pdftotext
+islandora_pdf_path_to_gs: /usr/bin/gs
+islandora_pdf_preview_width: 500
+islandora_pdf_preview_height: 700
+islandora_pdf_create_fulltext: false
+islandora_pdf_create_pdfa: false
+islandora_pdf_allow_text_upload: false
