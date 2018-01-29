@@ -76,6 +76,7 @@ class Admin extends ModuleHandlerAdminForm {
    * {@inheritdoc}
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
+    $form_state->loadInclude('islandora_pdf', 'inc', 'includes/admin.form');
     if ($form_state->getValue('islandora_pdf_path_to_pdftotext')) {
       $islandora_pdf_path_to_pdftotext = $form_state->getValue('islandora_pdf_path_to_pdftotext');
     }
@@ -271,7 +272,7 @@ class Admin extends ModuleHandlerAdminForm {
       $islandora_pdf_path_to_pdftotext = $form_state->getValue('islandora_pdf_path_to_pdftotext');
       exec($islandora_pdf_path_to_pdftotext, $output, $return_value);
       if ($return_value != 99) {
-        form_set_error('', $this->t('Cannot extract text from PDF without a valid path to pdftotext.'));
+        $form_state->setErrorByName('', $this->t('Cannot extract text from PDF without a valid path to pdftotext.'));
       }
     }
     if ($form_state->getValue('islandora_pdf_create_pdfa')) {
@@ -279,7 +280,7 @@ class Admin extends ModuleHandlerAdminForm {
       $gs_test_command = $islandora_pdf_path_to_gs . ' --help';
       exec($gs_test_command, $output, $return_value);
       if ($return_value != 0) {
-        form_set_error('', $this->t('Cannot create PDF/A without ghostscript.'));
+        $form_state->setErrorByName('', $this->t('Cannot create PDF/A without ghostscript.'));
       }
     }
   }
