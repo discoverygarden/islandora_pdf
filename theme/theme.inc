@@ -63,8 +63,7 @@ function template_preprocess_islandora_pdf(array &$variables) {
         'object' => $islandora_object->id,
         'datastream' => 'OBJ',
         'filename' => "{$sanitized_label}.pdf",
-      ]);
-      $download_url->setOptions(['attributes' => ['class' => ['islandora-pdf-link']]]);
+      ], ['attributes' => ['class' => ['islandora-pdf-link']]]);
       $islandora_download_link = Link::fromTextAndUrl(
         t("Download pdf"),
         $download_url
