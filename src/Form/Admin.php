@@ -88,7 +88,7 @@ class Admin extends ModuleHandlerAdminForm {
       '#uri' => '/core/misc/icons/73b355/check.svg',
     ];
     $pdftotext_confirmation_message = $this->renderer->render($pdftotext_confirmation_image)
-      . $this->t('pdftotext executable found at @url', ['@url' => "<strong>$islandora_pdf_path_to_pdftotext</strong>"]);
+      . $this->t('pdftotext executable found at <strong>@url</strong>', ['@url' => $islandora_pdf_path_to_pdftotext]);
 
     if ($return_value != 99) {
       $pdftotext_confirmation_image = [
@@ -96,7 +96,7 @@ class Admin extends ModuleHandlerAdminForm {
         '#uri' => '/core/misc/icons/e32700/error.svg',
       ];
       $pdftotext_confirmation_message = $this->renderer->render($pdftotext_confirmation_image)
-        . $this->t('Unable to find pdftotext executable at @url', ['@url' => "<strong>$islandora_pdf_path_to_pdftotext</strong>"]);
+        . $this->t('Unable to find pdftotext executable at <strong>@url</strong>', ['@url' => $islandora_pdf_path_to_pdftotext]);
     }
 
     if ($form_state->getValue('islandora_pdf_path_to_gs')) {
@@ -112,7 +112,7 @@ class Admin extends ModuleHandlerAdminForm {
       '#uri' => '/core/misc/icons/73b355/check.svg',
     ];
     $gs_confirmation_message = $this->renderer->render($gs_confirmation_image)
-      . $this->t('ghostscript executable found at @url', ['@url' => "<strong>$islandora_pdf_path_to_gs</strong>"]);
+      . $this->t('ghostscript executable found at <strong>@url</strong>', ['@url' => $islandora_pdf_path_to_gs]);
 
     if ($return_value != 0) {
       $gs_confirmation_image = [
@@ -120,7 +120,7 @@ class Admin extends ModuleHandlerAdminForm {
         '#uri' => '/core/misc/icons/e32700/error.svg',
       ];
       $gs_confirmation_message = $this->renderer->render($gs_confirmation_image)
-        . $this->t('Unable to find ghotscript executable at @url', ['@url' => "<strong>$islandora_pdf_path_to_gs</strong>"]);
+        . $this->t('Unable to find ghotscript executable at <strong>@url</strong>', ['@url' => $islandora_pdf_path_to_gs]);
     }
 
     $form = [];
@@ -171,11 +171,7 @@ class Admin extends ModuleHandlerAdminForm {
       '#type' => 'textfield',
       '#title' => $this->t('Path to pdftotext executable'),
       '#default_value' => $islandora_pdf_path_to_pdftotext,
-      '#description' => $this->t('@pdftotext_confirmation_message',
-        [
-          '@pdftotext_confirmation_message' => $pdftotext_confirmation_message,
-        ]
-      ),
+      '#description' => $pdftotext_confirmation_message,
       '#ajax' => [
         'callback' => 'islandora_update_pdftotext_url_div',
         'wrapper' => 'islandora-url',
@@ -194,11 +190,7 @@ class Admin extends ModuleHandlerAdminForm {
       '#type' => 'textfield',
       '#title' => $this->t('Path to ghostscript executable'),
       '#default_value' => $islandora_pdf_path_to_gs,
-      '#description' => $this->t('@gs_confirmation_message',
-        [
-          '@gs_confirmation_message' => $gs_confirmation_message,
-        ]
-      ),
+      '#description' => $gs_confirmation_message,
       '#ajax' => [
         'callback' => 'islandora_update_gs_url_div',
         'wrapper' => 'islandora-url',
