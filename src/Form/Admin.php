@@ -162,11 +162,6 @@ class Admin extends ModuleHandlerAdminForm {
       '#suffix' => '</div>',
       '#type' => 'markup',
     ];
-    $form['islandora_pdf_url_fieldset']['wrapper'] = [
-      '#prefix' => '<div id="islandora-url">',
-      '#suffix' => '</div>',
-      '#type' => 'markup',
-    ];
 
     $form['islandora_pdf_url_fieldset']['wrapper']['islandora_pdf_path_to_pdftotext'] = [
       '#type' => 'textfield',
