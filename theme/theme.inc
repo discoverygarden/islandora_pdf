@@ -59,7 +59,11 @@ function template_preprocess_islandora_pdf(array &$variables) {
 
       // Sanitize this object name a bit and provide download link.
       $sanitized_label = preg_replace('/[^A-Za-z0-9_\-]|\.pdf$/', '_', $islandora_object->label);
-      $download_url = Url::fromUserInput("/islandora/object/{$islandora_object->id}/datastream/OBJ/download/{$sanitized_label}.pdf");
+      $download_url = Url::fromRoute('islandora.download_datastream', [
+        'object' => $islandora_object->id,
+        'datastream' => 'OBJ',
+        'filename' => "{$sanitized_label}.pdf",
+      ]);
       $download_url->setOptions(['attributes' => ['class' => ['islandora-pdf-link']]]);
       $islandora_download_link = Link::fromTextAndUrl(
         t("Download pdf"),
