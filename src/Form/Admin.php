@@ -62,6 +62,8 @@ class Admin extends ModuleHandlerAdminForm {
     $config->set('islandora_pdf_allow_text_upload', $form_state->getValue('islandora_pdf_allow_text_upload'));
     $config->save();
 
+    islandora_set_viewer_info('islandora_pdf_viewers', $form_state->getValue('islandora_pdf_viewers'));
+
     parent::submitForm($form, $form_state);
   }
 
@@ -77,6 +79,7 @@ class Admin extends ModuleHandlerAdminForm {
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
     $form_state->loadInclude('islandora_pdf', 'inc', 'includes/admin.form');
+    $form_state->loadInclude('islandora', 'inc', 'includes/solution_packs');
     if ($form_state->getValue('islandora_pdf_path_to_pdftotext')) {
       $islandora_pdf_path_to_pdftotext = $form_state->getValue('islandora_pdf_path_to_pdftotext');
     }
@@ -249,7 +252,6 @@ class Admin extends ModuleHandlerAdminForm {
       '#size' => 5,
     ];
 
-    module_load_include('inc', 'islandora', 'includes/solution_packs');
     $form += islandora_viewers_form('islandora_pdf_viewers', 'application/pdf');
     $form['submit'] = [
       '#type' => 'submit',
