@@ -8,7 +8,7 @@ This module supports the ingest view and management of PDFs.
 
 This module requires the following modules/libraries:
 
-* [Islandora](https://github.com/islandora/islandora)
+* [Islandora](https://github.com/discoverygarden/islandora)
 * [Tuque](https://github.com/islandora/tuque)
 * [ImageMagick](http://www.imagemagick.org/script/index.php)
   *  Debian/Ubuntu `sudo apt-get install imagemagick`
