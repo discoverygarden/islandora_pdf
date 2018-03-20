@@ -5,6 +5,7 @@
  * Contains all the functions required for adding derivatives for the PDF SP.
  */
 
+use Drupal\Core\Logger\RfcLogLevel;
 use Drupal\imagemagick\ImagemagickExecArguments;
 
 use Drupal\islandora\MimeDetect;
@@ -96,7 +97,7 @@ function islandora_pdf_add_fulltext_derivative(AbstractObject $object, $force = 
               '%error' => $execout,
             ],
             'type' => 'dsm',
-            'severity' => WATCHDOG_ERROR,
+            'severity' => RfcLogLevel::ERROR,
           ],
         ],
       ];
@@ -129,7 +130,7 @@ function islandora_pdf_add_fulltext_derivative(AbstractObject $object, $force = 
                 '@error' => $success,
               ],
               'type' => 'watchdog',
-              'severity' => WATCHDOG_ERROR,
+              'severity' => RfcLogLevel::ERROR,
             ],
           ],
         ];
@@ -172,7 +173,7 @@ function islandora_pdf_add_pdfa_derivative(AbstractObject $object, $force = FALS
             '%error' => $execout,
           ],
           'type' => 'dsm',
-          'severity' => WATCHDOG_ERROR,
+          'severity' => RfcLogLevel::ERROR,
         ],
       ],
     ];
@@ -201,7 +202,7 @@ function islandora_pdf_add_pdfa_derivative(AbstractObject $object, $force = FALS
               '@error' => $success,
             ],
             'type' => 'watchdog',
-            'severity' => WATCHDOG_ERROR,
+            'severity' => RfcLogLevel::ERROR,
           ],
         ],
       ];
@@ -264,7 +265,6 @@ function islandora_pdf_add_jpg_derivative(AbstractObject $object, $file_uri, $ds
       return islandora_pdf_missing_obj_datastream($object->id);
     }
     $derivative_file_uri = islandora_pdf_create_jpg_derivative($file_uri, $dsid, $width, $height);
-    file_unmanaged_delete($file_uri);
     // Receive a valid file URI to add or an error message otherwise.
     if (!is_array($derivative_file_uri) && file_valid_uri($derivative_file_uri)) {
       $success = islandora_pdf_add_datastream($object, $dsid, $derivative_file_uri);
@@ -296,7 +296,7 @@ function islandora_pdf_add_jpg_derivative(AbstractObject $object, $file_uri, $ds
                 '@message' => $success,
               ],
               'type' => 'watchdog',
-              'severity' => WATCHDOG_ERROR,
+              'severity' => RfcLogLevel::ERROR,
             ],
           ],
         ];
@@ -357,7 +357,7 @@ function islandora_pdf_create_jpg_derivative($file_uri, $dsid, $width, $height) 
             '@output' => $output,
           ],
           'type' => 'watchdog',
-          'severity' => WATCHDOG_ERROR,
+          'severity' => RfcLogLevel::ERROR,
         ],
       ],
     ];
@@ -401,7 +401,6 @@ function islandora_pdf_add_datastream(AbstractObject $object, $datastream_id, $f
   catch (exception $e) {
     $return = $e->getMessage();
   }
-  file_unmanaged_delete($file_uri);
   return $return;
 }
 
@@ -424,7 +423,7 @@ function islandora_pdf_missing_obj_datastream($pid) {
         'message' => t('Could not create image derivatives for %s. No image file was uploaded.'),
         'message_sub' => ['%s' => $pid],
         'type' => 'watchdog',
-        'severity' => WATCHDOG_ERROR,
+        'severity' => RfcLogLevel::ERROR,
       ],
     ],
   ];
