@@ -89,7 +89,7 @@ class Admin extends ModuleHandlerAdminForm {
     exec($islandora_pdf_path_to_pdftotext, $output, $return_value);
     $pdftotext_confirmation_image = [
       '#theme' => 'image',
-      '#uri' => '/core/misc/icons/73b355/check.svg',
+      '#uri' => Url::fromUri('base:core/misc/icons/73b355/check.svg')->toString(),
     ];
     $pdftotext_confirmation_message = $this->renderer->render($pdftotext_confirmation_image)
       . $this->t('pdftotext executable found at <strong>@url</strong>', ['@url' => $islandora_pdf_path_to_pdftotext]);
@@ -97,7 +97,7 @@ class Admin extends ModuleHandlerAdminForm {
     if ($return_value != 99) {
       $pdftotext_confirmation_image = [
         '#theme' => 'image',
-        '#uri' => '/core/misc/icons/e32700/error.svg',
+        '#uri' => Url::fromUri('base:core/misc/icons/e32700/error.svg')->toString(),
       ];
       $pdftotext_confirmation_message = $this->renderer->render($pdftotext_confirmation_image)
         . $this->t('Unable to find pdftotext executable at <strong>@url</strong>', ['@url' => $islandora_pdf_path_to_pdftotext]);
@@ -113,7 +113,7 @@ class Admin extends ModuleHandlerAdminForm {
     exec($gs_test_command, $output, $return_value);
     $gs_confirmation_image = [
       '#theme' => 'image',
-      '#uri' => '/core/misc/icons/73b355/check.svg',
+      '#uri' => Url::fromUri('base:core/misc/icons/73b355/check.svg')->toString(),
     ];
     $gs_confirmation_message = $this->renderer->render($gs_confirmation_image)
       . $this->t('ghostscript executable found at <strong>@url</strong>', ['@url' => $islandora_pdf_path_to_gs]);
@@ -121,7 +121,7 @@ class Admin extends ModuleHandlerAdminForm {
     if ($return_value != 0) {
       $gs_confirmation_image = [
         '#theme' => 'image',
-        '#uri' => '/core/misc/icons/e32700/error.svg',
+        '#uri' => Url::fromUri('base:core/misc/icons/e32700/error.svg')->toString(),
       ];
       $gs_confirmation_message = $this->renderer->render($gs_confirmation_image)
         . $this->t('Unable to find ghotscript executable at <strong>@url</strong>', ['@url' => $islandora_pdf_path_to_gs]);
