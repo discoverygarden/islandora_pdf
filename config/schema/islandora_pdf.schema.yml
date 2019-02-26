@@ -1,5 +1,5 @@
 islandora_pdf.settings:
-  type: mapping
+  type: config_object
   label: Settings
   mapping:
     islandora_pdf_thumbnail_width:
