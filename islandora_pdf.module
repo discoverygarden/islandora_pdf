@@ -108,6 +108,7 @@ function islandora_pdf_xml_form_builder_forms() {
 function islandora_pdf_xml_form_builder_form_associations() {
   return [
     'islandora_pdf_mods_form' => [
+      'self_transform' => 'islandora_cleanup_mods_extended.xsl',
       'content_model' => 'islandora:sp_pdf',
       'form_name' => 'PDF MODS form',
       'dsid' => 'MODS',
