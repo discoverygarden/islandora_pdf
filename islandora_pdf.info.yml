@@ -1,5 +1,5 @@
 name: 'Islandora PDF'
-description: 'A default Islandora Repository module to handle PDF files.'
+description: 'Adds PDF ingest and display functionality in Islandora.'
 dependencies:
   - :islandora
   - imagemagick:imagemagick
