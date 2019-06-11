@@ -59,6 +59,7 @@ class Admin extends ModuleHandlerAdminForm {
     $config->set('islandora_pdf_preview_height', $form_state->getValue('islandora_pdf_preview_height'));
     $config->set('islandora_pdf_create_fulltext', $form_state->getValue('islandora_pdf_create_fulltext'));
     $config->set('islandora_pdf_create_pdfa', $form_state->getValue('islandora_pdf_create_pdfa'));
+    $config->set('islandora_pdf_use_duseciecolor', $form_state->getValue('islandora_pdf_use_duseciecolor'));
     $config->set('islandora_pdf_allow_text_upload', $form_state->getValue('islandora_pdf_allow_text_upload'));
     $config->save();
 
@@ -158,6 +159,21 @@ class Admin extends ModuleHandlerAdminForm {
       '#title' => $this->t("Create PDF/A archival derivative from PDF"),
       '#description' => $this->t("Create a PDF/A version of any uploaded PDF. PDF/A is a restrictive standard that prohibits more easily broken components of the PDF spec, such as fillable forms and DRM. The PDF/A derivative will not be used for display. Requires ghostscript to be installed on the server."),
       '#default_value' => $this->config('islandora_pdf.settings')->get('islandora_pdf_create_pdfa'),
+    ];
+
+    $executable = escapeshellarg($this->config('islandora_pdf.settings')->get('islandora_pdf_path_to_gs'));
+    $version_command = "$executable --version";
+    exec($version_command, $version);
+    $form['islandora_pdf_url_fieldset']['islandora_pdf_use_duseciecolor'] = [
+      '#type' => 'checkbox',
+      '#title' => $this->t("Use dUseCIEColor when generating PDFA datastream."),
+      '#description' => $this->t('As of GhostScript @threshold, the <a href="@post_url">use of the @switch switch is not recommended</a>. </br>Version installed: @version.', [
+        '@post_url' => 'https://ghostscript.com/pipermail/gs-devel/2014-July/009693.html',
+        '@threshold' => '9.11',
+        '@switch' => 'dUseCIEColor',
+        '@version' => $version[0],
+      ]),
+      '#default_value' => $this->config('islandora_pdf.settings')->get('islandora_pdf_use_duseciecolor'),
     ];
 
     $form['islandora_pdf_url_fieldset']['wrapper'] = [

@@ -152,10 +152,24 @@ function islandora_pdf_add_pdfa_derivative(AbstractObject $object, $force = FALS
   $file_uri = islandora_pdf_get_derivative_source_as_unmanaged_file($object);
   $dsid = "PDFA";
   $source = $source = \Drupal::service("file_system")->realpath($file_uri);
-  $executable = \Drupal::config('islandora_pdf.settings')->get('islandora_pdf_path_to_gs');
+  $settings = \Drupal::config('islandora_pdf.settings');
+  $executable = $settings->get('islandora_pdf_path_to_gs');
   $temp = file_create_filename('pdfa.pdf', 'temporary://');
   $derivative_file_uri = \Drupal::service("file_system")->realpath($temp);
-  $command = "$executable -dPDFA -dNOOUTERSAVE -dUseCIEColor -sProcessColorModel=DeviceRGB -sDEVICE=pdfwrite -o $derivative_file_uri -dPDFACompatibilityPolicy=1 $source ";
+
+  $command = implode(' ', array_map('escapeshellarg', array_filter([
+    $executable,
+    '-dPDFA',
+    '-dNOOUTERSAVE',
+    ($settings->get('islandora_pdf_use_duseciecolor') ? '-dUseCIEColor' : ''),
+    '-sProcessColorModel=DeviceRGB',
+    '-sDEVICE=pdfwrite',
+    '-o',
+    $derivative_file_uri,
+    '-dPDFACompatibilityPolicy=1',
+    $source,
+  ])));
+
   exec($command, $execout, $returncode);
   file_unmanaged_delete($file_uri);
   $success = ($returncode === 0);

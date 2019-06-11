@@ -16,7 +16,7 @@ This module requires the following modules/libraries:
   * configure the **path** to convert at (admin/config/media/image-toolkit)
 * [pdftotext](http://poppler.freedesktop.org)
   * Debian/Ubuntu `sudo apt-get install poppler-utils`
-* [ghostscript](http://www.ghostscript.com)
+* [ghostscript](http://www.ghostscript.com) (> 9.11)
   * Debian/Ubuntu `sudo apt-get install ghostscript`
 
 ## Installation

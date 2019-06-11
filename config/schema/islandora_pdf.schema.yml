@@ -20,3 +20,5 @@ islandora_pdf.settings:
       type: boolean
     islandora_pdf_allow_text_upload:
       type: boolean
+    islandora_pdf_use_duseciecolor:
+      type: boolean
