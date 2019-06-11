@@ -167,8 +167,8 @@ class Admin extends ModuleHandlerAdminForm {
     $form['islandora_pdf_url_fieldset']['islandora_pdf_use_duseciecolor'] = [
       '#type' => 'checkbox',
       '#title' => $this->t("Use dUseCIEColor when generating PDFA datastream."),
-      '#description' => $this->t('As of GhostScript @threshold, the <a href="@post_url">use of the @switch switch is not recommended</a>. </br>Version installed: @version.', [
-        '@post_url' => 'https://ghostscript.com/pipermail/gs-devel/2014-July/009693.html',
+      '#description' => $this->t('As of GhostScript @threshold, the <a href=":post_url">use of the @switch switch is not recommended</a>. </br>Version installed: @version.', [
+        ':post_url' => 'https://ghostscript.com/pipermail/gs-devel/2014-July/009693.html',
         '@threshold' => '9.11',
         '@switch' => 'dUseCIEColor',
         '@version' => $version[0],
