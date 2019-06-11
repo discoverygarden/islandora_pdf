@@ -7,3 +7,4 @@ islandora_pdf_preview_height: 700
 islandora_pdf_create_fulltext: false
 islandora_pdf_create_pdfa: false
 islandora_pdf_allow_text_upload: false
+islandora_pdf_use_duseciecolor: false
